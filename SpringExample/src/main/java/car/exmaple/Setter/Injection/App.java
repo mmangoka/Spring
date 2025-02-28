@@ -1,4 +1,4 @@
-package car.exmaple.constructor.injection;
+package car.exmaple.Setter.Injection;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -9,7 +9,7 @@ public class App {
 
         /*creating a spring container*/
         ApplicationContext context  =
-                new ClassPathXmlApplicationContext("applicationConstructorInjection.xml");
+                new ClassPathXmlApplicationContext("applicationSetterInjection.xml");
 
         Car myCar = (Car) context.getBean("myCar");
         myCar.displayDetails();
