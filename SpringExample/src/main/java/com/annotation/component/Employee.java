@@ -1,28 +1,26 @@
-package com.example.autowire.annotation;
+package com.annotation.component;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("employee")
 public class Employee {
 
-    @Value("1234")
-    private int EmployeeID;
-    @Value("Michelle mimi")
-    private String firstName;
 
+    private int employeeID;
+    @Value("Hello")
+    private String firstName;
     @Value("${java.home}")
     private String lastName;
-
-    @Value("#{4*4}")
+    @Value("{java.home}")
     private double salary;
 
     public int getEmployeeID() {
-        return EmployeeID;
+        return employeeID;
     }
 
     public void setEmployeeID(int employeeID) {
-        EmployeeID = employeeID;
+        this.employeeID = employeeID;
     }
 
     public String getFirstName() {
@@ -49,10 +47,11 @@ public class Employee {
         this.salary = salary;
     }
 
+
     @Override
     public String toString() {
         return "Employee{" +
-                "EmployeeID=" + EmployeeID +
+                "employeeID=" + employeeID +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", salary=" + salary +
