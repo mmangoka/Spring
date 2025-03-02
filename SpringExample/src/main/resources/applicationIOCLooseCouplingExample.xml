@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean definitions here IOC challenge-->
+    <bean id="userDatabaseProvider"
+          class="com.IOC.coupling.UserDatabaseProvider"/>
+
+    <bean id="newDatabaseProvider"
+          class="com.IOC.coupling.NewDatabaseProvider"/>
+
+    <bean id="webServiceDataProvider"
+          class="com.IOC.coupling.WebServiceDataProvider"/>
+
+    <bean id = "userManagerWithUserDataProvider" class="com.IOC.coupling.UserManager">
+        <constructor-arg ref ="userDatabaseProvider"/>
+    </bean>
+
+    <bean id = "userManagerWithNewDatabaseProvider" class="com.IOC.coupling.UserManager">
+        <constructor-arg ref ="newDatabaseProvider"/>
+    </bean>
+
+    <bean id = "userManagerWithwebServiceDataProvider" class="com.IOC.coupling.UserManager">
+        <constructor-arg ref ="webServiceDataProvider"/>
+    </bean>
+
+</beans>
