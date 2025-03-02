@@ -1,3 +1,3 @@
 SPRING REPOSITORY - Upskilling
 Tech :JAVA,SPRING
-IDE:Intellij ,MAVEN
+IDE:Intellij ,Build Tool:MAVEN
