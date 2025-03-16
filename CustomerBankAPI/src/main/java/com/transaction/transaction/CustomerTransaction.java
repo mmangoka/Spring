@@ -36,5 +36,4 @@ public class CustomerTransaction {
     private LocalDateTime transactionDate = LocalDateTime.now();
 
 
-
 }
