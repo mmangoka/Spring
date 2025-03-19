@@ -7,6 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
@@ -31,14 +32,26 @@ public class CategoryServiceImpl implements CategoryService{
         Category category = categories.stream()
         .filter(c->c.getCategoryID().equals(categoryID))
                 .findFirst().
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"NotFound"));
 
 
-        if(category != null) {
             categories.remove(category);
             return "Category with categoryID: " + categoryID + " deleted Successfully.";
-        }else {
-            return "Category with categoryID: " + categoryID + " does not exist.";
-        }
+
+    }
+
+    @Override
+    public Category updateCategory(Category category,Long categoryID){
+        Optional<Category> OptionalcategoriesUpdate = categories.stream()
+                .filter(c->c.getCategoryID().equals(categoryID))
+                .findFirst();
+
+         if(OptionalcategoriesUpdate.isPresent()){
+             Category existingCategory = OptionalcategoriesUpdate.get();
+             existingCategory.setCategoryName(category.getCategoryName());
+             return existingCategory;
+         }else{
+             throw  new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not found");
+         }
     }
 }
