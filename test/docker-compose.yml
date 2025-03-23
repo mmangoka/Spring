@@ -1,0 +1,8 @@
+services:
+  demo:
+    build: .
+    ports:
+      - "8085:8080"
+      - "5005:5005"
+    volumes:
+      - .:/app

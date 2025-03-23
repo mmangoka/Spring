@@ -1,6 +1,7 @@
 package com.ecommerce.project.Service;
 
 import com.ecommerce.project.model.Category;
+import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,6 +15,12 @@ public class CategoryServiceImpl implements CategoryService{
     private List<Category> categories =  new ArrayList<>();
 
     private Long nextId = 1L;
+
+    @PostConstruct
+    public void init() {
+        categories.add(new Category(nextId++, "Electronics"));
+        categories.add(new Category(nextId++, "Clothing"));
+    }
 
     @Override
     public List<Category> getAllCategories() {
@@ -53,5 +60,7 @@ public class CategoryServiceImpl implements CategoryService{
          }else{
              throw  new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not found");
          }
+
+
     }
 }
