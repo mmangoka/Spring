@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  app:
+    image: spring-debug
+    build: .
+    ports:
+      - "8080:8080"
+
+    restart: always
+
+    environment:
+      SPRING_PROFILES_ACTIVE: production
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"

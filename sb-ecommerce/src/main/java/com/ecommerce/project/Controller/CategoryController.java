@@ -29,8 +29,12 @@ public class CategoryController {
 
      @PostMapping("/admin/categories")
      public ResponseEntity<String> createCategory(@RequestBody Category category){
-        categoryService.createCategory(category);
-        return  new ResponseEntity<>("Category added successfully.",HttpStatus.OK);
+         try {
+             categoryService.createCategory(category);
+             return new ResponseEntity<>("Category added successfully.", HttpStatus.OK);
+         } catch (Exception e) {
+             return new ResponseEntity<>("Error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+         }
      }
 
      @DeleteMapping("/admin/categories/{categoryID}")
