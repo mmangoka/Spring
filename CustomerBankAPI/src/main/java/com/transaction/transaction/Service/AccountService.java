@@ -1,13 +1,13 @@
-package com.transaction.transaction;
+package com.transaction.transaction.Service;
 
 
+import com.transaction.transaction.repositories.AccountRepository;
+import com.transaction.transaction.Model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,7 +18,7 @@ public class AccountService {
     private AccountRepository accountRepository;
 
 
-    public Account  saveAccount(Account accountRequest){
+    public Account saveAccount(Account accountRequest){
          Account account =  new Account(accountRequest.getAccountNumber(),
             accountRequest.getOwnerName(),accountRequest.getBalance());
 

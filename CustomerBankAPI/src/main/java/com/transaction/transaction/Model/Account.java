@@ -1,4 +1,4 @@
-package com.transaction.transaction;
+package com.transaction.transaction.Model;
 
 import jakarta.persistence.*;
 import lombok.*;

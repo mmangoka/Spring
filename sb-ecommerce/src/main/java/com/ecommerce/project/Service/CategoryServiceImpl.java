@@ -1,5 +1,6 @@
 package com.ecommerce.project.Service;
 
+import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.repositories.CategoryRepository;
 import jakarta.annotation.PostConstruct;
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService{
     public String deleteCategory(Long categoryID) {
 
         Category category = categoryRepository.findById(categoryID).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not Found"));
+                orElseThrow(() ->  new ResourceNotFoundException("Category","CategoryId",categoryID));
 
             categoryRepository.delete(category);
             return "Category with categoryID: " + categoryID + " deleted Successfully.";
@@ -47,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService{
 
 
          Category savedCategory = categoryRepository.findById(categoryID).
-                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not Found"));
+                 orElseThrow(() -> new ResourceNotFoundException("Category","CategoryId",categoryID));
 
          category.setCategoryID(categoryID);
 

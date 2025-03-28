@@ -3,6 +3,7 @@ package com.ecommerce.project.Controller;
 
 import com.ecommerce.project.Service.CategoryService;
 import com.ecommerce.project.model.Category;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CategoryController {
 
 
      @PostMapping("/admin/categories")
-     public ResponseEntity<String> createCategory(@RequestBody Category category){
+     public ResponseEntity<String> createCategory(@Valid @RequestBody Category category){
          try {
              categoryService.createCategory(category);
              return new ResponseEntity<>("Category added successfully.", HttpStatus.OK);
