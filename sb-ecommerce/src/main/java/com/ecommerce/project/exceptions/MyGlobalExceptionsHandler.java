@@ -34,4 +34,13 @@ public class MyGlobalExceptionsHandler {
         String message = e.getMessage();
     return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
     }
+
+
+
+    /*Handle items already existing e.g category */
+    @ExceptionHandler(APIExceptions.class)
+    public ResponseEntity<String>  myAPIExceptions(APIExceptions e){
+        String message = e.getMessage();
+        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+    }
 }
