@@ -2,14 +2,16 @@ package com.ecommerce.project.Service;
 
 
 import com.ecommerce.project.model.Category;
+import com.ecommerce.project.payLoad.CategoryDTO;
+import com.ecommerce.project.payLoad.CategoryResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 /*interface to promote loose coupling*/
 public interface CategoryService {
-    List<Category> getAllCategories();
-    void createCategory(Category category);
-    String deleteCategory(@PathVariable Long categoryID);
-    Category updateCategory(Category category,@PathVariable Long categoryID);
+    CategoryResponse getAllCategories();
+    CategoryDTO createCategory(CategoryDTO categoryDTO);
+    CategoryDTO deleteCategory(@PathVariable Long categoryID);
+    CategoryDTO updateCategory(CategoryDTO categoryDTO,@PathVariable Long categoryID);
 }
