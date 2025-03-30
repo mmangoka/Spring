@@ -10,7 +10,7 @@ import java.util.List;
 
 /*interface to promote loose coupling*/
 public interface CategoryService {
-    CategoryResponse getAllCategories();
+    CategoryResponse getAllCategories(Integer pageNumber, Integer PageSize,String sortBy,String sortOrder);
     CategoryDTO createCategory(CategoryDTO categoryDTO);
     CategoryDTO deleteCategory(@PathVariable Long categoryID);
     CategoryDTO updateCategory(CategoryDTO categoryDTO,@PathVariable Long categoryID);

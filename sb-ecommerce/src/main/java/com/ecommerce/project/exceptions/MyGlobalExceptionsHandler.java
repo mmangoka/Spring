@@ -1,5 +1,6 @@
 package com.ecommerce.project.exceptions;
 
+import com.ecommerce.project.payLoad.APIResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -30,17 +31,19 @@ public class MyGlobalExceptionsHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String>  myResourceNotFoundException(ResourceNotFoundException e){
+    public ResponseEntity<APIResponse>  myResourceNotFoundException(ResourceNotFoundException e){
         String message = e.getMessage();
-    return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
+        APIResponse apiresponse = new APIResponse(message,false);
+        return new ResponseEntity<>(apiresponse,HttpStatus.NOT_FOUND);
     }
 
 
 
     /*Handle items already existing e.g category */
     @ExceptionHandler(APIExceptions.class)
-    public ResponseEntity<String>  myAPIExceptions(APIExceptions e){
+    public ResponseEntity<APIResponse>  myAPIExceptions(APIExceptions e){
         String message = e.getMessage();
-        return new ResponseEntity<>(message,HttpStatus.BAD_REQUEST);
+        APIResponse apiresponse = new APIResponse(message,false);
+        return new ResponseEntity<>(apiresponse,HttpStatus.BAD_REQUEST);
     }
 }
