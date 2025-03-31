@@ -1,8 +1,12 @@
 package com.transaction.transaction.Controller;
 
-import com.transaction.transaction.Service.AccountService;
+import com.transaction.transaction.Service.AccountServiceImpl;
 import com.transaction.transaction.Model.Account;
+import com.transaction.transaction.payLoad.APIResponse;
+import com.transaction.transaction.payLoad.AccountDTO;
+import com.transaction.transaction.payLoad.CustomerTransactionsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +19,15 @@ import java.util.List;
 public class AccountController {
 
     @Autowired
-    private AccountService accountService;
+    private AccountServiceImpl accountService;
 
     @PostMapping("/saveAccount")
-    public Account saveAccount(@RequestBody Account account){
-        return accountService.saveAccount(account);
+    public ResponseEntity<APIResponse> saveAccount(@RequestBody AccountDTO accountDTO){
+        AccountDTO createAccountDTO = accountService.saveAccount(accountDTO);
+
+        APIResponse<AccountDTO> response = new APIResponse<>("Transaction : Account  Creation successful",
+                createAccountDTO, true );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
@@ -29,16 +37,16 @@ public class AccountController {
         return ResponseEntity.ok(account);
     }
 
-    @GetMapping("/GetAccountById/{accountId}")
-    public ResponseEntity<Account> getAccountByAccountNumber(@PathVariable String accountNumber){
-            Account account = accountService.findAccountsByAccountNumber( accountNumber);
-            return ResponseEntity.ok(account);
+    @GetMapping("/GetAccountById/{account_number}")
+    public ResponseEntity<Account> getAccountByAccountNumber(@PathVariable("account_number") String account_number){
+           Account account = accountService.findAccountByAccountNumber( account_number);
+            return new ResponseEntity<>(account , HttpStatus.OK);
 
     }
 
-    @GetMapping("/GetAccountBalance/{accountNumber}")
-    public BigDecimal findBalanceByAccountNumber (@PathVariable String accountNumber){
-         return accountService.findBalanceByAccountNumber(accountNumber);
+    @GetMapping("/GetAccountBalance/{account_number}")
+    public BigDecimal findBalanceByAccountNumber (@PathVariable("account_number") String account_number){
+         return accountService.findBalanceByAccountNumber(account_number);
     }
 
 

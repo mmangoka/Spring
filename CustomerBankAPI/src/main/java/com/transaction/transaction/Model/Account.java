@@ -7,10 +7,9 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "accounts")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class Account {
 
 
@@ -18,7 +17,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Getter
+
     @Column(nullable =  false ,unique = true)
     private String accountNumber;
 
@@ -27,12 +26,5 @@ public class Account {
 
     @Column(nullable =  false)
     private BigDecimal balance;
-
-
-    public Account(String accountNumber, String ownerName, BigDecimal balance) {
-        this.accountNumber = accountNumber;
-        this.ownerName = ownerName;
-        this.balance = balance;
-    }
 
 }

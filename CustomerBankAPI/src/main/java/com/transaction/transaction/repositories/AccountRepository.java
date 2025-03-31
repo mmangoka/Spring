@@ -16,5 +16,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a.balance FROM Account a WHERE a.accountNumber = :accountNumber")
     BigDecimal findBalanceByAccountNumber(@Param("accountNumber") String accountNumber);
 
-     Optional<Account> findByAccountNumber(String accountNumber);
+     Account findAccountByAccountNumber(String account_number);
+
 }

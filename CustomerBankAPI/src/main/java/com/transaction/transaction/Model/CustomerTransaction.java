@@ -9,16 +9,14 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class CustomerTransaction {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private long id;
+    private long transactionID;
 
     @Column(nullable =  false)
     private String senderAccountNumber;
