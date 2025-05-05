@@ -1,0 +1,84 @@
+🚀 1. Pull the MySQL Image
+bash
+Copy
+Edit
+docker pull mysql:latest
+This downloads the latest MySQL image.
+
+🛠 2. Run a MySQL Container
+bash
+Copy
+Edit
+docker run -d --name mysql-container \
+  -e MYSQL_ROOT_PASSWORD=rootpassword \
+  -e MYSQL_DATABASE=mydb \
+  -e MYSQL_USER=myuser \
+  -e MYSQL_PASSWORD=mypassword \
+  -p 3306:3306 \
+  -v mysql_data:/var/lib/mysql \
+  mysql:latest
+Explanation:
+-d → Runs in detached mode (background).
+
+--name mysql-container → Names the container.
+
+-e MYSQL_ROOT_PASSWORD=rootpassword → Sets the root password.
+
+-e MYSQL_DATABASE=mydb → Creates a database.
+
+-e MYSQL_USER=myuser & -e MYSQL_PASSWORD=mypassword → Creates a user.
+
+-p 3306:3306 → Maps MySQL's default port.
+
+-v mysql_data:/var/lib/mysql → Persistent storage using a volume.
+
+📋 3. Verify the Running Container
+bash
+Copy
+Edit
+docker ps
+🔍 4. Connect to MySQL Inside the Container
+bash
+Copy
+Edit
+docker exec -it mysql-container mysql -u root -p
+Enter the root password when prompted.
+
+🎯 5. Docker Compose (Optional)
+Instead of docker run, you can use Docker Compose.
+
+➤ Create a docker-compose.yml file:
+yaml
+Copy
+Edit
+version: '3.8'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+➤ Run with:
+bash
+Copy
+Edit
+docker compose up -d
+📌 6. Stop and Remove the Container
+bash
+Copy
+Edit
+docker stop mysql-container
+docker rm mysql-container
+docker volume rm mysql_data  # Deletes persistent data
+

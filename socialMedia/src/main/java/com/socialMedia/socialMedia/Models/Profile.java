@@ -17,6 +17,7 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long profileID;
 
+
     @OneToOne
     @JoinColumn(name = "socialID")
     @JsonIgnore
@@ -24,4 +25,12 @@ public class Profile {
 
 
     private String description;
+
+    public void setSocialUser(SocialUser socialUser) {
+        this.socialUser = socialUser;
+
+        if (socialUser.getProfile() != this) {
+            socialUser.setProfile(this);
+        }
+    }
 }

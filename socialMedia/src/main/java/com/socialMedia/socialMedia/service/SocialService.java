@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SocialService {
@@ -20,6 +21,16 @@ public class SocialService {
     }
 
     public SocialUser saveUser(SocialUser socialUser) {
-        return socialUserRepository.save(socialUser);
+
+           return socialUserRepository.save(socialUser);
+
+    }
+
+    public SocialUser deleteSocialUser(Long id) {
+        SocialUser socialUser = socialUserRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("Social User Not found."));
+         socialUserRepository.delete(socialUser);
+
+         return socialUser;
     }
 }
