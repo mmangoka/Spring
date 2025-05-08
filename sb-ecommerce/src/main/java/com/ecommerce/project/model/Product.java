@@ -20,7 +20,7 @@ public class Product {
     private String productName;
     private String productDescription;
     private Integer quantity;
-    private double productPrice;
+    private double price;
     private double discount;
     private double specialProductPrice;
     private String image;

@@ -36,8 +36,8 @@ public class ProductServiceImpl implements ProductService{
                 orElseThrow(()-> new ResourceNotFoundException("Category","categoryID","Category not found"))   ;
 
         product.setCategory(category);
-        double specialPrice = product.getProductPrice() -
-                ((product.getDiscount() * 0.01) * product.getProductPrice());
+        double specialPrice = product.getPrice() -
+                ((product.getDiscount() * 0.01) * product.getPrice());
 
         product.setImage("default.png");
         Product savedProduct = productRepository.save(product);
@@ -51,7 +51,7 @@ public class ProductServiceImpl implements ProductService{
     public ProductResponse getAllProducts() {
         List<Product> products = productRepository.findAll();
         List<ProductDTO> productDTOS = products.stream().
-                    map(product -> mapper.map(product,ProductDTO.class)).collect(Collectors.toList());
+                    map(product -> mapper.map(product,ProductDTO.class)).toList();
 
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
@@ -59,17 +59,34 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public ProductResponse getProductsByCategory(Long categoryID) {
-        Category category = categoryRepository.findById(categoryID).
-                orElseThrow(()-> new ResourceNotFoundException("Category","categoryID","Category not found"))   ;
+    public ProductResponse getProductsByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).
+                orElseThrow(()-> new ResourceNotFoundException("Category","categoryId","Category not found"));
 
-        List<Product> products = productRepository.findByCategoryOrderByproductPriceAsc(categoryID);
+        List<Product> products = productRepository.findByCategoryOrderByPriceAsc(category);
 
-        List<ProductDTO> productDTOS = products.stream().
-                map(product -> mapper.map(product,ProductDTO.class)).collect(Collectors.toList());
+        List<ProductDTO>  productDTO = products.stream().
+                map(product -> mapper.map(product,ProductDTO.class)).toList();
 
         ProductResponse productResponse = new ProductResponse();
-        productResponse.setContent(productDTOS);
+        productResponse.setContent(productDTO);
+        return productResponse;
+
+    }
+
+
+    @Override
+    public ProductResponse searchProductByKeyword(String keyword) {
+
+        List<Product> products = productRepository.findByProductNameLikeIgnoreCase('%' + keyword + '%');
+
+        List<ProductDTO>  productDTO = products.stream().
+                map(product -> mapper.map(product,ProductDTO.class)).toList();
+
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTO);
         return productResponse;
     }
+
+
 }
