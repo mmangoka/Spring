@@ -2,6 +2,7 @@ package com.example.securityDemo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,7 +16,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -23,13 +27,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity //used for role based authentication
 public class SecurityConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
+    @Autowired
+    DataSource datasource;
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) ->
-                        requests.requestMatchers("/h2-console/**").permitAll()
-                .anyRequest().authenticated());
+       http.authorizeHttpRequests((requests) ->
+       requests.requestMatchers("/h2-console/**").permitAll()
+       .anyRequest().authenticated());
         //http.formLogin(Customizer.withDefaults());
         http.sessionManagement(session->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -55,6 +60,12 @@ public class SecurityConfig {
                 roles("ADMIN").
                 build();
 
-        return new InMemoryUserDetailsManager(user1,admin);//implementation of userdetailsmanager
+        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(datasource);
+
+        userDetailsManager.createUser(user1);
+        userDetailsManager.createUser(admin);
+        return userDetailsManager;
+
+        //return new InMemoryUserDetailsManager(user1,admin);//implementation of userdetailsmanager
     }
 }
