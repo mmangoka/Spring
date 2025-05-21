@@ -1,9 +1,13 @@
 package com.example.securityDemo;
 
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +19,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,14 +33,43 @@ import javax.sql.DataSource;
 @EnableMethodSecurity //used for role based authentication
 public class SecurityConfig {
 
+
     @Autowired
-    DataSource datasource;
+    private DataSource dataSource;
+
+
+    //configure in memory authentication
+    @Bean
+    @DependsOn("dataSourceInitializer")
+    public UserDetailsService userDetailsService() {
+        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+
+        if (!userDetailsManager.userExists("user1")) {
+            userDetailsManager.createUser(
+                    User.withUsername("user1")
+                            .password(passwordEncoder().encode("password1"))
+                            .roles("USER")
+                            .build()
+            );
+        }
+
+        if (!userDetailsManager.userExists("admin")) {
+            userDetailsManager.createUser(
+                    User.withUsername("admin")
+                            .password(passwordEncoder().encode("adminPass"))
+                            .roles("ADMIN")
+                            .build()
+            );
+        }
+
+        return userDetailsManager;
+    }
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-       http.authorizeHttpRequests((requests) ->
-       requests.requestMatchers("/h2-console/**").permitAll()
-       .anyRequest().authenticated());
+        http.authorizeHttpRequests((requests) ->
+                requests.requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().authenticated());
         //http.formLogin(Customizer.withDefaults());
         http.sessionManagement(session->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -45,27 +80,10 @@ public class SecurityConfig {
         return (SecurityFilterChain)http.build();
     }
 
-
-    //configure in memory authentication
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user1 = User.withUsername("user1").
-                password("{noop}password1").
-                roles("USER").
-                build();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
 
-
-        UserDetails admin = User.withUsername("admin").
-                password("{noop}adminPass").
-                roles("ADMIN").
-                build();
-
-        JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(datasource);
-
-        userDetailsManager.createUser(user1);
-        userDetailsManager.createUser(admin);
-        return userDetailsManager;
-
-        //return new InMemoryUserDetailsManager(user1,admin);//implementation of userdetailsmanager
     }
+
 }

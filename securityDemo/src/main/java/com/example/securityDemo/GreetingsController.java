@@ -15,14 +15,14 @@ public class GreetingsController {
     }
 
 
-    @PreAuthorize("hasRole('USER')")//tell spring authority with this role to access this end  point
+    //@PreAuthorize("hasRole('USER')")//tell spring authority with this role to access this end  point
     @GetMapping("/user")
     public String userEndPoint(){
         return "Hello User";
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin")
     public String adminEndPoint(){
         return "Hello Admin";
