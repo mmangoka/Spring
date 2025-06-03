@@ -1,5 +1,7 @@
 package com.example.securityDemo;
 
+import com.example.securityDemo.jwt.AuthEntryPointJwt;
+import com.example.securityDemo.jwt.AuthTokenFilter;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -36,6 +39,14 @@ public class SecurityConfig {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
+
+    @Bean
+    private AuthTokenFilter authenticationJwtFilter(){
+        return new AuthTokenFilter();
+    }
 
 
     //configure in memory authentication
@@ -68,15 +79,24 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) ->
-                requests.requestMatchers("/h2-console/**").permitAll()
+                requests.requestMatchers("/h2-console/**").permitAll().
+                         requestMatchers("/api/signIn").permitAll()
                         .anyRequest().authenticated());
         //http.formLogin(Customizer.withDefaults());
         http.sessionManagement(session->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.exceptionHandling(
+                exception ->
+                        exception.authenticationEntryPoint(unauthorizedHandler)
+        );//manages any unauthorized requests
+
         http.httpBasic(Customizer.withDefaults());//basic authentication use http basic authentication with basic default settings
         http.headers(headers->
                 headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         http.csrf(AbstractHttpConfigurer::disable);
+
+        http.addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class);
         return (SecurityFilterChain)http.build();
     }
 

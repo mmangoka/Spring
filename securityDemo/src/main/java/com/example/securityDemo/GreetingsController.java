@@ -1,6 +1,8 @@
 package com.example.securityDemo;
 
 
+import com.example.securityDemo.jwt.JwtUtils;
+import com.example.securityDemo.jwt.LogInResponse;
 import com.example.securityDemo.jwt.LoginRequest;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,8 @@ public class GreetingsController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtUtils jwtUtils;
 
 
     @GetMapping("/hello")
@@ -75,9 +81,12 @@ public class GreetingsController {
         String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
         List<String> roles =  userDetails.getAuthorities().
                 stream().
-                map(item -> item.getAuthority()).
-                collect(Collectors.toList());
+                map(GrantedAuthority::getAuthority).
+                toList();
+         LogInResponse response =  new LogInResponse(userDetails.getUsername(),
+                 jwtToken,roles);
 
+         return ResponseEntity.ok(response);
 
 
     }
