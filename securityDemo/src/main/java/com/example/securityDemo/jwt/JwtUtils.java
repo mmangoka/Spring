@@ -22,10 +22,10 @@ public class JwtUtils {
     private static final Logger logger =  LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${spring.app.jwtSecret}")
-    private int jwtExpirationInSeconds;
+    private String jwtSecret;
 
     @Value("${spring.app.jwtExpirationInSeconds}")
-    private String jwtSecret;
+    private int jwtExpirationInSeconds;
 
     //Getting JWT from the header
     public String JWTfRomHeader(HttpServletRequest request) {
