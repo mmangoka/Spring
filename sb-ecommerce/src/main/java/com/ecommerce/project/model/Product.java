@@ -7,11 +7,14 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity(name = "product")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "products")
+@ToString
 public class Product {
 
     @Id
@@ -35,9 +38,14 @@ public class Product {
     private String image;
 
 
+
     @ManyToOne
     @JoinColumn(name = "categoryID")
     private Category category;
+
+    @ManyToOne //associate a product and a seller
+    @JoinColumn(name = "seller_id")
+    private User user;
 
 
 }
